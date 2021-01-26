@@ -1,1 +1,32 @@
+#Tharika Munasinghe
 
+import logging
+import re
+from urlparse import urlparse
+
+LOG = "request-analyzer.log"
+SERVER_LOG = "server-log.log"
+MALICIOUS_REGEX = "MALICIOUS_REGEX"
+URL_REGEX = "(?P<url>https?://[^\s]+)"
+
+#Set up logging
+logging.basicConfig(filename=LOG,level=logging.DEBUG,format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+logging.info('Analyzing requests')
+
+#Read server log
+with open(SERVER_LOG) as f:
+    lines = f.readlines()
+
+for line in lines:
+    #Detect malicious requests
+    malicious_line = re.search(MALICIOUS_REGEX, line)
+    if malicious_line is not None:
+        #Malicious request found
+
+        #Extract URL
+        url = re.search(URL_REGEX, line)
+        if url is not None:
+            print (url.group("url"))
+            domain = urlparse(url.group("url")).netloc
+            print (domain)
+            
